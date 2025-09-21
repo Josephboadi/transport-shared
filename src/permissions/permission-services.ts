@@ -1,4 +1,8 @@
-import { PrismaClient } from "@prisma/client";
+// import { PrismaClient } from "@prisma/client";
+
+import { PrismaClient } from '../generated/client';
+
+// import { prisma } from '../database/db';
 
 export class PermissionService {
   private prisma = new PrismaClient();
@@ -38,7 +42,7 @@ export class PermissionService {
         (rp: any) =>
           rp.permission.name === permissionName ||
           rp.permission.name === `${resource}.*` ||
-          rp.permission.name === "*.*"
+          rp.permission.name === '*.*'
       );
 
       if (hasPermission) return true;
@@ -68,8 +72,8 @@ export class PermissionService {
     });
 
     const permissions = new Set<string>();
-    userRoles.forEach((userRole:any) => {
-      userRole.role.rolePermissions.forEach((rp:any) => {
+    userRoles.forEach((userRole: any) => {
+      userRole.role.rolePermissions.forEach((rp: any) => {
         permissions.add(rp.permission.name);
       });
     });
