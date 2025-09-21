@@ -4,6 +4,7 @@ export interface User {
   phone?: string;
   firstName: string;
   lastName: string;
+  password: string;
   userType: UserType;
   isActive: boolean;
   createdAt: Date;
@@ -11,10 +12,10 @@ export interface User {
 }
 
 export enum UserType {
-  PASSENGER = "passenger",
-  DRIVER = "driver",
-  ADMIN = "admin",
-  SUPER_ADMIN = "super_admin",
+  PASSENGER = 'passenger',
+  DRIVER = 'driver',
+  ADMIN = 'admin',
+  SUPER_ADMIN = 'super_admin',
 }
 
 export interface Location {
@@ -33,9 +34,9 @@ export interface Location {
 }
 
 export enum LocationType {
-  PICKUP = "pickup",
-  DROPOFF = "dropoff",
-  BOTH = "both",
+  PICKUP = 'pickup',
+  DROPOFF = 'dropoff',
+  BOTH = 'both',
 }
 
 export interface Route {
@@ -75,18 +76,18 @@ export interface Trip {
 }
 
 export enum TripStatus {
-  SCHEDULED = "scheduled",
-  READY_FOR_BOARDING = "ready_for_boarding",
-  BOARDING = "boarding",
-  IN_PROGRESS = "in_progress",
-  COMPLETED = "completed",
-  CANCELLED = "cancelled",
-  DELAYED = "delayed",
+  SCHEDULED = 'scheduled',
+  READY_FOR_BOARDING = 'ready_for_boarding',
+  BOARDING = 'boarding',
+  IN_PROGRESS = 'in_progress',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  DELAYED = 'delayed',
 }
 
 export enum LocationStage {
-  PICKUP = "pickup",
-  DROPOFF = "dropoff",
+  PICKUP = 'pickup',
+  DROPOFF = 'dropoff',
 }
 
 export interface Booking {
@@ -108,18 +109,18 @@ export interface Booking {
 }
 
 export enum PaymentStatus {
-  PENDING = "pending",
-  COMPLETED = "completed",
-  FAILED = "failed",
-  REFUNDED = "refunded",
+  PENDING = 'pending',
+  COMPLETED = 'completed',
+  FAILED = 'failed',
+  REFUNDED = 'refunded',
 }
 
 export enum BookingStatus {
-  CONFIRMED = "confirmed",
-  BOARDED = "boarded",
-  COMPLETED = "completed",
-  CANCELLED = "cancelled",
-  NO_SHOW = "no_show",
+  CONFIRMED = 'confirmed',
+  BOARDED = 'boarded',
+  COMPLETED = 'completed',
+  CANCELLED = 'cancelled',
+  NO_SHOW = 'no_show',
 }
 
 export interface Role {
