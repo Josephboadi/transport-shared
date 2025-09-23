@@ -2,7 +2,7 @@
 
 // import { PrismaClient } from '../generated/client';
 
-import { Prisma } from '../database/db';
+import { prisma } from '../database/db';
 
 export class PermissionService {
   // private prisma = new PrismaClient();
@@ -14,7 +14,7 @@ export class PermissionService {
     contextId?: string
   ): Promise<boolean> {
     // const userRoles = await this.prisma.userRole.findMany({
-    const userRoles = await Prisma.userRole.findMany({
+    const userRoles = await prisma.userRole.findMany({
       where: {
         userId,
         isActive: true,
@@ -54,7 +54,7 @@ export class PermissionService {
 
   async getUserPermissions(userId: string): Promise<string[]> {
     // const userRoles = await this.prisma.userRole.findMany({
-    const userRoles = await Prisma.userRole.findMany({
+    const userRoles = await prisma.userRole.findMany({
       where: {
         userId,
         isActive: true,
