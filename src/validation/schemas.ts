@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const createLocationSchema = z.object({
+export const CreateLocationSchema = z.object({
   name: z.string().min(1).max(255),
   address: z.string().min(1),
   latitude: z.number().min(-90).max(90),
@@ -17,7 +17,7 @@ export const createLocationSchema = z.object({
     .optional(),
 });
 
-export const createRouteSchema = z.object({
+export const CreateRouteSchema = z.object({
   routeName: z.string().min(1).max(255),
   routeCode: z.string().min(1).max(50),
   description: z.string().optional(),
@@ -33,7 +33,7 @@ export const createRouteSchema = z.object({
   distanceBasedPricing: z.boolean().default(false),
 });
 
-export const createBookingSchema = z.object({
+export const CreateBookingSchema = z.object({
   tripId: z.string().cuid(),
   pickupLocationId: z.string().cuid(),
   dropoffLocationId: z.string().cuid(),

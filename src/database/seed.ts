@@ -2,7 +2,7 @@
 
 // import { PrismaClient } from './db';
 
-import { prisma } from './db';
+import { Prisma } from './db';
 
 // const prisma = new PrismaClient();
 
@@ -203,7 +203,7 @@ async function seedDatabase() {
       },
     ];
 
-    await prisma.permission.createMany({
+    await Prisma.permission.createMany({
       data: permissions,
       skipDuplicates: true,
     });
@@ -250,7 +250,7 @@ async function seedDatabase() {
 
     const createdRoles: any = [];
     for (const role of roles) {
-      const createdRole = await prisma.role.upsert({
+      const createdRole = await Prisma.role.upsert({
         where: { name: role.name },
         update: {},
         create: role,
@@ -351,12 +351,12 @@ async function seedDatabase() {
       if (!role) continue;
 
       for (const permissionName of rolePermission.permissions) {
-        const permission = await prisma.permission.findUnique({
+        const permission = await Prisma.permission.findUnique({
           where: { name: permissionName },
         });
 
         if (permission) {
-          await prisma.rolePermission.upsert({
+          await Prisma.rolePermission.upsert({
             where: {
               roleId_permissionId: {
                 roleId: role.id,
@@ -378,7 +378,7 @@ async function seedDatabase() {
     console.error('❌ Error seeding database:', error);
     throw error;
   } finally {
-    await prisma.$disconnect();
+    await Prisma.$disconnect();
   }
 }
 
