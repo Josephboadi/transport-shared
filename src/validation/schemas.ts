@@ -1,11 +1,11 @@
-import { z } from "zod";
+import { z } from 'zod';
 
 export const createLocationSchema = z.object({
   name: z.string().min(1).max(255),
   address: z.string().min(1),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
-  locationType: z.enum(["pickup", "dropoff", "both"]),
+  locationType: z.enum(['pickup', 'dropoff', 'both']),
   facilities: z.array(z.string()).default([]),
   operatingHours: z
     .record(
@@ -15,6 +15,7 @@ export const createLocationSchema = z.object({
       })
     )
     .optional(),
+  createdBy: z.string().min(1),
 });
 
 export const createRouteSchema = z.object({
