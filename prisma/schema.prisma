@@ -54,21 +54,21 @@ model Driver {
 }
 
 model Location {
-    id             String        @id @default(cuid())
+    id             String       @id @default(cuid())
     name           String
     address        String
-    latitude       Decimal       @db.Decimal(10, 8)
-    longitude      Decimal       @db.Decimal(11, 8)
-    locationType   LocationType? @map("location_type")
+    latitude       Decimal      @db.Decimal(10, 8)
+    longitude      Decimal      @db.Decimal(11, 8)
+    locationType   LocationType @map("location_type")
     facilities     String[]
-    operatingHours Json?         @map("operating_hours")
-    isActive       Boolean       @default(true) @map("is_active")
-    createdBy      String        @map("created_by")
-    createdAt      DateTime      @default(now()) @map("created_at")
-    updatedAt      DateTime      @updatedAt @map("updated_at")
+    operatingHours Json?        @map("operating_hours")
+    isActive       Boolean      @default(true) @map("is_active")
+    createdBy      String       @map("created_by")
+    createdAt      DateTime     @default(now()) @map("created_at")
+    updatedAt      DateTime     @updatedAt @map("updated_at")
 
     // Relations
-    creator         User?     @relation("LocationCreatedBy", fields: [createdBy], references: [id])
+    creator         User      @relation("LocationCreatedBy", fields: [createdBy], references: [id])
     pickupBookings  Booking[] @relation("BookingPickupLocation")
     dropoffBookings Booking[] @relation("BookingDropoffLocation")
 

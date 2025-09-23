@@ -5,7 +5,7 @@ export const createLocationSchema = z.object({
   address: z.string().min(1),
   latitude: z.number().min(-90).max(90),
   longitude: z.number().min(-180).max(180),
-  locationType: z.enum(['pickup', 'dropoff', 'both']),
+  locationType: z.enum(['PICKUP', 'DROPOFF', 'BOTH']),
   facilities: z.array(z.string()).default([]),
   operatingHours: z
     .record(
