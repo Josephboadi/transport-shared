@@ -15,7 +15,6 @@ export const createLocationSchema = z.object({
       })
     )
     .optional(),
-  createdBy: z.string().min(1),
 });
 
 export const createRouteSchema = z.object({
