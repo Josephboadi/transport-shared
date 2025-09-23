@@ -1,10 +1,10 @@
 // import { PrismaClient } from '@prisma/client';
 
-import { PrismaClient } from './db';
+// import { PrismaClient } from './db';
 
-// import { prisma } from './db';
+import { prisma } from './db';
 
-const prisma = new PrismaClient();
+// const prisma = new PrismaClient();
 
 async function seedDatabase() {
   console.log('🌱 Seeding database...');

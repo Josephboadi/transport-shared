@@ -1,6 +1,6 @@
-// import { PrismaClient } from "@prisma/client";
+import { PrismaClient } from '@prisma/client';
 
-import { PrismaClient } from '../generated/client';
+// import { PrismaClient } from '../generated/client';
 
 // import { prisma } from '../database/db';
 

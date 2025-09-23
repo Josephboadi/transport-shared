@@ -1,6 +1,6 @@
 export { JwtPayload, JwtService } from './auth/jwt';
 export { AuthenticatedRequest, AuthMiddleware } from './auth/middleware';
-export { PrismaClient } from './database/db';
+export { prisma } from './database/db';
 export { seedDatabase } from './database/seed';
 export { PermissionService } from './permissions/permission-services';
 export {
