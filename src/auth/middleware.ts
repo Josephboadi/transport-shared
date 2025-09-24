@@ -1,18 +1,18 @@
 import { NextFunction, Request, Response } from 'express';
 import { PermissionService } from '../permissions/permission-services';
-import { JwtService } from './jwt';
+import { JWTService } from './jwt';
 
 export type AuthenticatedRequest = Request & {
   user?: {
     userId: string;
     email: string;
-    userType: string;
+    // userType: string;
     roles: string[];
   };
 };
 
 export class AuthMiddleware {
-  private jwtService = new JwtService();
+  private jwtService = new JWTService();
   private permissionService = new PermissionService();
 
   authenticate = async (

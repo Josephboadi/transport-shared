@@ -1,6 +1,5 @@
 generator client {
-    provider      = "prisma-client-js"
-    binaryTargets = ["native", "darwin-arm64"]
+    provider = "prisma-client-js"
 }
 
 datasource db {
@@ -11,174 +10,48 @@ datasource db {
 model User {
     id        String   @id @default(cuid())
     email     String   @unique
-    phone     String?
-    firstName String   @map("first_name")
-    lastName  String   @map("last_name")
+    phone     String   @unique
+    firstName String
+    lastName  String
     password  String
-    userType  UserType @default(PASSENGER) @map("user_type")
-    isActive  Boolean  @default(true) @map("is_active")
-    createdAt DateTime @default(now()) @map("created_at")
-    updatedAt DateTime @updatedAt @map("updated_at")
+    isActive  Boolean  @default(true)
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 
     // Relations
-    bookings   Booking[]
-    userRoles  UserRole[]
-    locations  Location[] @relation("LocationCreatedBy")
-    routes     Route[]    @relation("RouteCreatedBy")
-    trips      Trip[]     @relation("TripDriver")
-    driverInfo Driver?
+    userRoles UserRole[]
+    bookings  Booking[]
+    locations Location[]
+    routes    Route[]
 
     @@map("users")
-}
-
-model Driver {
-    id                    String    @id @default(cuid())
-    userId                String    @unique @map("user_id")
-    licenseNumber         String    @unique @map("license_number")
-    licenseExpiry         DateTime  @map("license_expiry")
-    backgroundCheckStatus String    @default("pending") @map("background_check_status")
-    backgroundCheckDate   DateTime? @map("background_check_date")
-    vehicleInfo           Json      @map("vehicle_info")
-    insuranceInfo         Json      @map("insurance_info")
-    serviceAreas          String[]  @map("service_areas")
-    hourlyRate            Decimal?  @map("hourly_rate") @db.Decimal(6, 2)
-    availabilitySchedule  Json?     @map("availability_schedule")
-    isActive              Boolean   @default(true) @map("is_active")
-    createdAt             DateTime  @default(now()) @map("created_at")
-    updatedAt             DateTime  @updatedAt @map("updated_at")
-
-    // Relations
-    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-    @@map("drivers")
-}
-
-model Location {
-    id             String       @id @default(cuid())
-    name           String
-    address        String
-    latitude       Decimal      @db.Decimal(10, 8)
-    longitude      Decimal      @db.Decimal(11, 8)
-    locationType   LocationType @map("location_type")
-    facilities     String[]
-    operatingHours Json?        @map("operating_hours")
-    isActive       Boolean      @default(true) @map("is_active")
-    createdBy      String       @map("created_by")
-    createdAt      DateTime     @default(now()) @map("created_at")
-    updatedAt      DateTime     @updatedAt @map("updated_at")
-
-    // Relations
-    creator         User      @relation("LocationCreatedBy", fields: [createdBy], references: [id])
-    pickupBookings  Booking[] @relation("BookingPickupLocation")
-    dropoffBookings Booking[] @relation("BookingDropoffLocation")
-
-    @@map("locations")
-}
-
-model Route {
-    id                       String   @id @default(cuid())
-    routeName                String   @map("route_name")
-    routeCode                String   @unique @map("route_code")
-    description              String?
-    pickupSequence           String[] @map("pickup_sequence")
-    dropoffSequence          String[] @map("dropoff_sequence")
-    estimatedDurationMinutes Int      @map("estimated_duration_minutes")
-    maxCapacity              Int      @default(50) @map("max_capacity")
-    operatingDays            Int[]    @map("operating_days")
-    departureTimes           String[] @map("departure_times")
-    basePrice                Decimal  @map("base_price") @db.Decimal(8, 2)
-    distanceBasedPricing     Boolean  @default(false) @map("distance_based_pricing")
-    isActive                 Boolean  @default(true) @map("is_active")
-    createdBy                String   @map("created_by")
-    createdAt                DateTime @default(now()) @map("created_at")
-    updatedAt                DateTime @updatedAt @map("updated_at")
-
-    // Relations
-    creator User   @relation("RouteCreatedBy", fields: [createdBy], references: [id])
-    trips   Trip[]
-
-    @@map("routes")
-}
-
-model Trip {
-    id                   String        @id @default(cuid())
-    routeId              String        @map("route_id")
-    driverId             String?       @map("driver_id")
-    tripCode             String        @unique @map("trip_code")
-    scheduledDate        DateTime      @map("scheduled_date") @db.Date
-    departureTime        String        @map("departure_time")
-    status               TripStatus    @default(SCHEDULED)
-    currentLocationIndex Int           @default(0) @map("current_location_index")
-    currentLocationStage LocationStage @default(PICKUP) @map("current_location_stage")
-    passengerCount       Int           @default(0) @map("passenger_count")
-    startedAt            DateTime?     @map("started_at")
-    completedAt          DateTime?     @map("completed_at")
-    createdAt            DateTime      @default(now()) @map("created_at")
-    updatedAt            DateTime      @updatedAt @map("updated_at")
-
-    // Relations
-    route    Route     @relation(fields: [routeId], references: [id])
-    driver   User?     @relation("TripDriver", fields: [driverId], references: [id])
-    bookings Booking[]
-
-    @@map("trips")
-}
-
-model Booking {
-    id                  String        @id @default(cuid())
-    tripId              String        @map("trip_id")
-    userId              String        @map("user_id")
-    pickupLocationId    String        @map("pickup_location_id")
-    dropoffLocationId   String        @map("dropoff_location_id")
-    verificationCode    String        @unique @map("verification_code")
-    qrCodeData          String        @map("qr_code_data")
-    price               Decimal       @db.Decimal(8, 2)
-    paymentStatus       PaymentStatus @default(COMPLETED) @map("payment_status")
-    bookingStatus       BookingStatus @default(CONFIRMED) @map("booking_status")
-    boardedAt           DateTime?     @map("boarded_at")
-    droppedOffAt        DateTime?     @map("dropped_off_at")
-    specialRequirements String[]      @map("special_requirements")
-    createdAt           DateTime      @default(now()) @map("created_at")
-    updatedAt           DateTime      @updatedAt @map("updated_at")
-
-    // Relations
-    trip            Trip     @relation(fields: [tripId], references: [id])
-    user            User     @relation(fields: [userId], references: [id])
-    pickupLocation  Location @relation("BookingPickupLocation", fields: [pickupLocationId], references: [id])
-    dropoffLocation Location @relation("BookingDropoffLocation", fields: [dropoffLocationId], references: [id])
-
-    @@map("bookings")
 }
 
 model Role {
     id           String   @id @default(cuid())
     name         String   @unique
-    displayName  String   @map("display_name")
+    displayName  String
     description  String?
-    parentRoleId String?  @map("parent_role_id")
-    isSystemRole Boolean  @default(false) @map("is_system_role")
-    isActive     Boolean  @default(true) @map("is_active")
-    createdAt    DateTime @default(now()) @map("created_at")
-    updatedAt    DateTime @updatedAt @map("updated_at")
+    isSystemRole Boolean  @default(false)
+    isActive     Boolean  @default(true)
+    createdAt    DateTime @default(now())
+    updatedAt    DateTime @updatedAt
 
     // Relations
-    parentRole      Role?            @relation("RoleHierarchy", fields: [parentRoleId], references: [id])
-    childRoles      Role[]           @relation("RoleHierarchy")
-    rolePermissions RolePermission[]
     userRoles       UserRole[]
+    rolePermissions RolePermission[]
 
     @@map("roles")
 }
 
 model Permission {
-    id              String   @id @default(cuid())
-    name            String   @unique
-    displayName     String   @map("display_name")
-    description     String?
-    resource        String
-    action          String
-    contextRequired Boolean  @default(false) @map("context_required")
-    createdAt       DateTime @default(now()) @map("created_at")
+    id          String   @id @default(cuid())
+    name        String   @unique
+    displayName String
+    description String?
+    resource    String
+    action      String
+    createdAt   DateTime @default(now())
 
     // Relations
     rolePermissions RolePermission[]
@@ -186,31 +59,16 @@ model Permission {
     @@map("permissions")
 }
 
-model RolePermission {
-    id           String   @id @default(cuid())
-    roleId       String   @map("role_id")
-    permissionId String   @map("permission_id")
-    grantedBy    String?  @map("granted_by")
-    createdAt    DateTime @default(now()) @map("created_at")
-
-    // Relations
-    role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
-    permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
-
-    @@unique([roleId, permissionId])
-    @@map("role_permissions")
-}
-
 model UserRole {
     id          String    @id @default(cuid())
-    userId      String    @map("user_id")
-    roleId      String    @map("role_id")
-    contextType String?   @map("context_type")
-    contextId   String?   @map("context_id")
-    assignedBy  String    @map("assigned_by")
-    expiresAt   DateTime? @map("expires_at")
-    isActive    Boolean   @default(true) @map("is_active")
-    createdAt   DateTime  @default(now()) @map("created_at")
+    userId      String
+    roleId      String
+    contextType String?
+    contextId   String?
+    assignedBy  String
+    expiresAt   DateTime?
+    isActive    Boolean   @default(true)
+    createdAt   DateTime  @default(now())
 
     // Relations
     user User @relation(fields: [userId], references: [id], onDelete: Cascade)
@@ -220,45 +78,166 @@ model UserRole {
     @@map("user_roles")
 }
 
-enum UserType {
-    PASSENGER
-    DRIVER
-    ADMIN
-    SUPER_ADMIN
+model RolePermission {
+    id           String   @id @default(cuid())
+    roleId       String
+    permissionId String
+    grantedBy    String?
+    createdAt    DateTime @default(now())
+
+    // Relations
+    role       Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+    permission Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+
+    @@unique([roleId, permissionId])
+    @@map("role_permissions")
+}
+
+model Location {
+    id             String       @id @default(cuid())
+    name           String
+    address        String
+    latitude       Float
+    longitude      Float
+    locationType   LocationType
+    facilities     String[]
+    operatingHours Json?
+    isActive       Boolean      @default(true)
+    createdBy      String
+    createdAt      DateTime     @default(now())
+    updatedAt      DateTime     @updatedAt
+
+    // Relations
+    creator         User      @relation(fields: [createdBy], references: [id])
+    pickupBookings  Booking[] @relation("PickupLocation")
+    dropoffBookings Booking[] @relation("DropoffLocation")
+
+    @@map("locations")
 }
 
 enum LocationType {
-    PICKUP
-    DROPOFF
-    BOTH
+    pickup
+    dropoff
+    both
+}
+
+model Route {
+    id                       String   @id @default(cuid())
+    routeName                String
+    routeCode                String   @unique
+    description              String?
+    pickupSequence           String[]
+    dropoffSequence          String[]
+    estimatedDurationMinutes Int
+    maxCapacity              Int      @default(50)
+    operatingDays            Int[]
+    departureTimes           String[]
+    basePrice                Float
+    distanceBasedPricing     Boolean  @default(false)
+    isActive                 Boolean  @default(true)
+    createdBy                String
+    createdAt                DateTime @default(now())
+    updatedAt                DateTime @updatedAt
+
+    // Relations
+    creator User   @relation(fields: [createdBy], references: [id])
+    trips   Trip[]
+
+    @@map("routes")
+}
+
+model Trip {
+    id                   String        @id @default(cuid())
+    routeId              String
+    driverId             String?
+    tripCode             String        @unique
+    scheduledDate        DateTime      @db.Date
+    departureTime        String
+    status               TripStatus    @default(scheduled)
+    currentLocationIndex Int           @default(0)
+    currentLocationType  LocationStage @default(pickup)
+    passengerCount       Int           @default(0)
+    startedAt            DateTime?
+    completedAt          DateTime?
+    createdAt            DateTime      @default(now())
+    updatedAt            DateTime      @updatedAt
+
+    // Relations
+    route    Route     @relation(fields: [routeId], references: [id])
+    driver   Driver?   @relation(fields: [driverId], references: [id])
+    bookings Booking[]
+
+    @@map("trips")
 }
 
 enum TripStatus {
-    SCHEDULED
-    READY_FOR_BOARDING
-    BOARDING
-    IN_PROGRESS
-    COMPLETED
-    CANCELLED
-    DELAYED
+    scheduled
+    ready_for_boarding
+    boarding
+    in_progress
+    completed
+    cancelled
+    delayed
 }
 
 enum LocationStage {
-    PICKUP
-    DROPOFF
+    pickup
+    dropoff
 }
 
-enum PaymentStatus {
-    PENDING
-    COMPLETED
-    FAILED
-    REFUNDED
+model Driver {
+    id            String   @id @default(cuid())
+    userId        String   @unique
+    licenseNumber String   @unique
+    vehicleInfo   Json?
+    rating        Float?
+    isActive      Boolean  @default(true)
+    createdAt     DateTime @default(now())
+    updatedAt     DateTime @updatedAt
+
+    // Relations
+    trips Trip[]
+
+    @@map("drivers")
+}
+
+model Booking {
+    id                  String        @id @default(cuid())
+    tripId              String
+    userId              String
+    pickupLocationId    String
+    dropoffLocationId   String
+    verificationCode    String        @unique
+    qrCodeData          String
+    price               Float
+    paymentStatus       PaymentStatus @default(completed)
+    bookingStatus       BookingStatus @default(confirmed)
+    boardedAt           DateTime?
+    droppedOffAt        DateTime?
+    specialRequirements String[]
+    createdAt           DateTime      @default(now())
+    updatedAt           DateTime      @updatedAt
+
+    // Relations
+    trip            Trip     @relation(fields: [tripId], references: [id])
+    user            User     @relation(fields: [userId], references: [id])
+    pickupLocation  Location @relation("PickupLocation", fields: [pickupLocationId], references: [id])
+    dropoffLocation Location @relation("DropoffLocation", fields: [dropoffLocationId], references: [id])
+
+    @@map("bookings")
 }
 
 enum BookingStatus {
-    CONFIRMED
-    BOARDED
-    COMPLETED
-    CANCELLED
-    NO_SHOW
+    confirmed
+    boarded
+    completed
+    cancelled
+    no_show
+}
+
+enum PaymentStatus {
+    pending
+    completed
+    failed
+    refunded
 }
