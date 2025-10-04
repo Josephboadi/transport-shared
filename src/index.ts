@@ -66,6 +66,7 @@ export {
   // Analytics
   routeAnalyticsQuerySchema,
   routeQuerySchema,
+  schemas,
   // Notification
   sendNotificationSchema,
   tripProgressUpdateSchema,
