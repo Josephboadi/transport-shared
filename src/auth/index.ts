@@ -1,5 +1,5 @@
 import * as crypto from 'crypto';
-import jwt, { SignOptions } from 'jsonwebtoken';
+import jwt from 'jsonwebtoken';
 import { AuthTokens, JwtPayload, Permission, Role, User } from '../types';
 import { Utils } from '../utils';
 
@@ -45,8 +45,8 @@ export class AuthUtils {
     const accessToken = jwt.sign(payload, AuthUtils.config.accessTokenSecret, {
       issuer: AuthUtils.config.issuer,
       audience: AuthUtils.config.audience,
-      expiresIn: AuthUtils.config.accessTokenExpiry,
-    } as SignOptions);
+      // expiresIn: AuthUtils.config.accessTokenExpiry,
+    });
 
     const refreshTokenPayload = {
       sub: user.id,
@@ -61,8 +61,8 @@ export class AuthUtils {
       {
         issuer: AuthUtils.config.issuer,
         audience: AuthUtils.config.audience,
-        expiresIn: AuthUtils.config.refreshTokenExpiry,
-      } as SignOptions
+        // expiresIn: AuthUtils.config.refreshTokenExpiry,
+      }
     );
 
     return {
