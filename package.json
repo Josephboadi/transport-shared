@@ -1,5 +1,5 @@
 {
-  "version": "0.0.5",
+  "version": "0.0.6",
   "license": "MIT",
   "types": "./src/index.d.ts",
   "description": "Helpers library for transportation app",
@@ -30,28 +30,8 @@
   ],
   "exports": {
     ".": {
-      "import": "./src",
-      "require": "./src"
-    },
-    "./utils": {
-      "import": "./src/utils/index.js",
-      "require": "./src/utils/index.js"
-    },
-    "./auth": {
-      "import": "./src/auth/index.js",
-      "require": "./src/auth/index.js"
-    },
-    "./database": {
-      "import": "./src/database/index.js",
-      "require": "./src/database/index.js"
-    },
-    "./types": {
-      "import": "./src/types/index.js",
-      "require": "./src/types/index.js"
-    },
-    "./validation": {
-      "import": "./src/validation/index.js",
-      "require": "./src/validation/index.js"
+      "import": "./src/index.js",
+      "require": "./src/index.js"
     }
   },
   "dependencies": {
