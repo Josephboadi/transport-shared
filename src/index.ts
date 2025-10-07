@@ -5,6 +5,7 @@ export {
   assignRoleSchema,
   bookingQuerySchema,
   BookingStatus,
+  bulkAssignPermissionsSchema,
   bulkCreateTripsSchema,
   bulkSendNotificationSchema,
   cancelBookingSchema,
