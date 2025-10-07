@@ -64,4 +64,4 @@ export {
   verifyPhoneSchema,
 } from './validation';
 
-export { Database } from './database';
+// export { Database } from './database';
