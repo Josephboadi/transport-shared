@@ -29,6 +29,7 @@ export {
   driverAnalyticsQuerySchema,
   DriverStatus,
   emailSchema,
+  forgotPasswordSchema,
   latitudeSchema,
   locationQuerySchema,
   LocationStage,

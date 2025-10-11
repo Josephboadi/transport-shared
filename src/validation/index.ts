@@ -2,7 +2,7 @@
 // SHARED VALIDATION SCHEMAS FOR BUS TRANSPORTATION PLATFORM
 // ============================================================================
 
-import { z } from "zod";
+import { z } from 'zod';
 
 // ============================================================================
 // COMMON VALIDATORS & ENUMS
@@ -10,70 +10,70 @@ import { z } from "zod";
 
 // Enums matching Prisma schema
 export const UserStatus = z.enum([
-  "ACTIVE",
-  "INACTIVE",
-  "SUSPENDED",
-  "PENDING_VERIFICATION",
+  'ACTIVE',
+  'INACTIVE',
+  'SUSPENDED',
+  'PENDING_VERIFICATION',
 ]);
 
-export const UserType = z.enum(["PASSENGER", "DRIVER", "ADMIN", "SYSTEM"]);
+export const UserType = z.enum(['PASSENGER', 'DRIVER', 'ADMIN', 'SYSTEM']);
 
-export const LocationType = z.enum(["PICKUP", "DROPOFF", "BOTH"]);
+export const LocationType = z.enum(['PICKUP', 'DROPOFF', 'BOTH']);
 
 export const TripStatus = z.enum([
-  "SCHEDULED",
-  "READY_FOR_BOARDING",
-  "BOARDING",
-  "IN_PROGRESS",
-  "COMPLETED",
-  "CANCELLED",
-  "DELAYED",
+  'SCHEDULED',
+  'READY_FOR_BOARDING',
+  'BOARDING',
+  'IN_PROGRESS',
+  'COMPLETED',
+  'CANCELLED',
+  'DELAYED',
 ]);
 
-export const LocationStage = z.enum(["PICKUP", "DROPOFF"]);
+export const LocationStage = z.enum(['PICKUP', 'DROPOFF']);
 
 export const BookingStatus = z.enum([
-  "CONFIRMED",
-  "BOARDED",
-  "COMPLETED",
-  "CANCELLED",
-  "NO_SHOW",
+  'CONFIRMED',
+  'BOARDED',
+  'COMPLETED',
+  'CANCELLED',
+  'NO_SHOW',
 ]);
 
 export const PaymentStatus = z.enum([
-  "PENDING",
-  "COMPLETED",
-  "FAILED",
-  "REFUNDED",
-  "PARTIALLY_REFUNDED",
+  'PENDING',
+  'COMPLETED',
+  'FAILED',
+  'REFUNDED',
+  'PARTIALLY_REFUNDED',
 ]);
 
 export const PaymentMethodEnum = z.enum([
-  "CREDIT_CARD",
-  "DEBIT_CARD",
-  "DIGITAL_WALLET",
-  "BANK_TRANSFER",
-  "CASH",
+  'CREDIT_CARD',
+  'DEBIT_CARD',
+  'DIGITAL_WALLET',
+  'BANK_TRANSFER',
+  'CASH',
 ]);
 
 export const DriverStatus = z.enum([
-  "AVAILABLE",
-  "ON_TRIP",
-  "OFF_DUTY",
-  "SUSPENDED",
+  'AVAILABLE',
+  'ON_TRIP',
+  'OFF_DUTY',
+  'SUSPENDED',
 ]);
 
 export const NotificationType = z.enum([
-  "TRIP_ASSIGNED",
-  "TRIP_REMINDER",
-  "TRIP_CANCELLED",
-  "TRIP_DELAYED",
-  "BOOKING_CONFIRMED",
-  "PAYMENT_SUCCESSFUL",
-  "SYSTEM_ALERT",
+  'TRIP_ASSIGNED',
+  'TRIP_REMINDER',
+  'TRIP_CANCELLED',
+  'TRIP_DELAYED',
+  'BOOKING_CONFIRMED',
+  'PAYMENT_SUCCESSFUL',
+  'SYSTEM_ALERT',
 ]);
 
-export const NotificationChannel = z.enum(["PUSH", "EMAIL", "SMS", "IN_APP"]);
+export const NotificationChannel = z.enum(['PUSH', 'EMAIL', 'SMS', 'IN_APP']);
 
 // Common validators
 export const uuidSchema = z.string().uuid();
@@ -112,11 +112,11 @@ export const registerUserSchema = z.object({
     .max(128)
     .regex(
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/,
-      "Password must contain uppercase, lowercase, number and special character"
+      'Password must contain uppercase, lowercase, number and special character'
     ),
   firstName: z.string().min(1).max(100),
   lastName: z.string().min(1).max(100),
-  userType: UserType.default("PASSENGER"),
+  userType: UserType.default('PASSENGER'),
   dateOfBirth: dateOnlySchema.optional(),
 });
 
@@ -136,6 +136,10 @@ export const changePasswordSchema = z.object({
     .min(8)
     .max(128)
     .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/),
+});
+
+export const forgotPasswordSchema = z.object({
+  email: emailSchema,
 });
 
 export const resetPasswordSchema = z.object({
@@ -172,13 +176,17 @@ export const updateUserStatusSchema = z.object({
 });
 
 export const userQuerySchema = z.object({
-  page: positiveInt.default(1),
-  limit: positiveInt.max(100).default(20),
+  page: z
+    .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+    .optional(),
+  limit: z
+    .preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1))
+    .optional(),
   status: UserStatus.optional(),
   userType: UserType.optional(),
   search: z.string().max(255).optional(),
-  sortBy: z.enum(["createdAt", "lastName", "email"]).default("createdAt"),
-  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+  sortBy: z.enum(['createdAt', 'lastName', 'email']).default('createdAt'),
+  sortOrder: z.enum(['asc', 'desc']).default('desc'),
 });
 
 // ============================================================================
@@ -228,11 +236,11 @@ export const updateVehicleSchema = createVehicleSchema.partial();
 
 export const uploadDriverDocumentSchema = z.object({
   documentType: z.enum([
-    "LICENSE",
-    "INSURANCE",
-    "REGISTRATION",
-    "BACKGROUND_CHECK",
-    "OTHER",
+    'LICENSE',
+    'INSURANCE',
+    'REGISTRATION',
+    'BACKGROUND_CHECK',
+    'OTHER',
   ]),
   documentUrl: z.string().url(),
   expiryDate: dateOnlySchema.optional(),
@@ -256,13 +264,13 @@ export const createLocationSchema = z.object({
   facilities: z
     .array(
       z.enum([
-        "WHEELCHAIR_ACCESSIBLE",
-        "SHELTER",
-        "PARKING",
-        "RESTROOM",
-        "SEATING",
-        "LIGHTING",
-        "SECURITY_CAMERA",
+        'WHEELCHAIR_ACCESSIBLE',
+        'SHELTER',
+        'PARKING',
+        'RESTROOM',
+        'SEATING',
+        'LIGHTING',
+        'SECURITY_CAMERA',
       ])
     )
     .default([]),
@@ -285,8 +293,12 @@ export const updateLocationSchema = createLocationSchema.partial().extend({
 
 export const locationQuerySchema = z
   .object({
-    page: positiveInt.default(1),
-    limit: positiveInt.max(100).default(20),
+    page: z
+      .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+      .optional(),
+    limit: z
+      .preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1))
+      .optional(),
     locationType: LocationType.optional(),
     isActive: z.boolean().optional(),
     search: z.string().max(255).optional(),
@@ -300,7 +312,7 @@ export const locationQuerySchema = z
       const hasRadius = data.radiusKm;
       return !hasRadius || hasCoords;
     },
-    { message: "Radius requires latitude and longitude" }
+    { message: 'Radius requires latitude and longitude' }
   );
 
 // ============================================================================
@@ -342,7 +354,7 @@ export const createRouteSchema = baseRouteSchema.refine(
       new Set(dropoffOrders).size === dropoffOrders.length
     );
   },
-  { message: "Location sequence orders must be unique within pickup/dropoff" }
+  { message: 'Location sequence orders must be unique within pickup/dropoff' }
 );
 
 export const updateRouteSchema = baseRouteSchema
@@ -350,8 +362,12 @@ export const updateRouteSchema = baseRouteSchema
   .extend({ isActive: z.boolean().optional() });
 
 export const routeQuerySchema = z.object({
-  page: positiveInt.default(1),
-  limit: positiveInt.max(100).default(20),
+  page: z
+    .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+    .optional(),
+  limit: z
+    .preprocess((val) => (val ? Number(val) : 10), z.number().int().min(1))
+    .optional(),
   isActive: z.boolean().optional(),
   search: z.string().max(255).optional(),
   operatingDay: z.number().int().min(0).max(6).optional(),
@@ -380,7 +396,7 @@ export const bulkCreateTripsSchema = z
     excludeDates: z.array(dateOnlySchema).optional(),
   })
   .refine((data) => new Date(data.startDate) <= new Date(data.endDate), {
-    message: "Start date must be before or equal to end date",
+    message: 'Start date must be before or equal to end date',
   });
 
 export const updateTripStatusSchema = z
@@ -391,17 +407,17 @@ export const updateTripStatusSchema = z
     currentLocationStage: LocationStage.optional(),
     cancellationReason: z.string().max(1000).optional(),
   })
-  .refine((data) => data.status !== "CANCELLED" || data.cancellationReason, {
-    message: "Cancellation reason required when status is CANCELLED",
+  .refine((data) => data.status !== 'CANCELLED' || data.cancellationReason, {
+    message: 'Cancellation reason required when status is CANCELLED',
   });
 
 export const tripProgressUpdateSchema = z.object({
   action: z.enum([
-    "START_BOARDING",
-    "COMPLETE_BOARDING",
-    "START_TRIP",
-    "ARRIVE_AT_LOCATION",
-    "COMPLETE_TRIP",
+    'START_BOARDING',
+    'COMPLETE_BOARDING',
+    'START_TRIP',
+    'ARRIVE_AT_LOCATION',
+    'COMPLETE_TRIP',
   ]),
   locationId: uuidSchema.optional(),
   locationType: LocationStage.optional(),
@@ -413,7 +429,7 @@ export const tripProgressUpdateSchema = z.object({
       z.object({
         bookingId: uuidSchema,
         verificationCode: z.string().max(20),
-        action: z.enum(["BOARDED", "DROPPED_OFF", "NO_SHOW"]),
+        action: z.enum(['BOARDED', 'DROPPED_OFF', 'NO_SHOW']),
         timestamp: dateSchema,
       })
     )
@@ -421,8 +437,12 @@ export const tripProgressUpdateSchema = z.object({
 });
 
 export const tripQuerySchema = z.object({
-  page: positiveInt.default(1),
-  limit: positiveInt.max(100).default(20),
+  page: z
+    .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+    .optional(),
+  limit: z
+    .preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1))
+    .optional(),
   routeId: uuidSchema.optional(),
   driverId: uuidSchema.optional(),
   status: TripStatus.optional(),
@@ -443,11 +463,11 @@ export const createBookingSchema = z.object({
   specialRequirements: z
     .array(
       z.enum([
-        "WHEELCHAIR",
-        "EXTRA_LUGGAGE",
-        "PET_FRIENDLY",
-        "CHILD_SEAT",
-        "PRIORITY_SEATING",
+        'WHEELCHAIR',
+        'EXTRA_LUGGAGE',
+        'PET_FRIENDLY',
+        'CHILD_SEAT',
+        'PRIORITY_SEATING',
       ])
     )
     .optional(),
@@ -455,7 +475,7 @@ export const createBookingSchema = z.object({
 
 export const verifyPassengerSchema = z.object({
   verificationCode: z.string().min(1).max(20),
-  action: z.enum(["BOARD", "VERIFY_ONLY"]),
+  action: z.enum(['BOARD', 'VERIFY_ONLY']),
 });
 
 export const cancelBookingSchema = z.object({
@@ -468,8 +488,12 @@ export const rateBookingSchema = z.object({
 });
 
 export const bookingQuerySchema = z.object({
-  page: positiveInt.default(1),
-  limit: positiveInt.max(100).default(20),
+  page: z
+    .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+    .optional(),
+  limit: z
+    .preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1))
+    .optional(),
   userId: uuidSchema.optional(),
   tripId: uuidSchema.optional(),
   status: BookingStatus.optional(),
@@ -485,7 +509,7 @@ export const processPaymentSchema = z.object({
   bookingId: uuidSchema,
   paymentMethod: PaymentMethodEnum,
   amount: currencyAmount,
-  currency: z.string().length(3).default("USD"),
+  currency: z.string().length(3).default('USD'),
   paymentMethodId: uuidSchema.optional(), // Saved payment method
   savePaymentMethod: z.boolean().default(false),
 });
@@ -513,12 +537,16 @@ export const refundPaymentSchema = z
     reason: z.string().min(1).max(1000),
   })
   .refine((data) => !data.amount || data.amount > 0, {
-    message: "Refund amount must be positive if specified",
+    message: 'Refund amount must be positive if specified',
   });
 
 export const paymentQuerySchema = z.object({
-  page: positiveInt.default(1),
-  limit: positiveInt.max(100).default(20),
+  ppage: z
+    .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+    .optional(),
+  limit: z
+    .preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1))
+    .optional(),
   status: PaymentStatus.optional(),
   userId: uuidSchema.optional(),
   dateFrom: dateOnlySchema.optional(),
@@ -562,12 +590,12 @@ export const assignRoleSchema = z
   .object({
     userId: uuidSchema,
     roleId: uuidSchema,
-    contextType: z.enum(["GLOBAL", "ROUTE", "LOCATION"]).optional(),
+    contextType: z.enum(['GLOBAL', 'ROUTE', 'LOCATION']).optional(),
     contextId: uuidSchema.optional(),
     expiresAt: dateSchema.optional(),
   })
   .refine((data) => !data.contextId || data.contextType, {
-    message: "Context type required when context ID is provided",
+    message: 'Context type required when context ID is provided',
   });
 
 export const revokeRoleSchema = z.object({
@@ -617,8 +645,12 @@ export const markNotificationReadSchema = z.object({
 });
 
 export const notificationQuerySchema = z.object({
-  page: positiveInt.default(1),
-  limit: positiveInt.max(100).default(20),
+  page: z
+    .preprocess((val) => (val ? Number(val) : 1), z.number().int().min(1))
+    .optional(),
+  limit: z
+    .preprocess((val) => (val ? Number(val) : 20), z.number().int().min(1))
+    .optional(),
   userId: uuidSchema.optional(),
   type: NotificationType.optional(),
   isRead: z.boolean().optional(),
@@ -635,10 +667,10 @@ export const routeAnalyticsQuerySchema = z
     routeId: uuidSchema.optional(),
     dateFrom: dateOnlySchema,
     dateTo: dateOnlySchema,
-    groupBy: z.enum(["DAY", "WEEK", "MONTH"]).default("DAY"),
+    groupBy: z.enum(['DAY', 'WEEK', 'MONTH']).default('DAY'),
   })
   .refine((data) => new Date(data.dateFrom) <= new Date(data.dateTo), {
-    message: "Start date must be before or equal to end date",
+    message: 'Start date must be before or equal to end date',
   });
 
 export const driverAnalyticsQuerySchema = z
@@ -646,16 +678,16 @@ export const driverAnalyticsQuerySchema = z
     driverId: uuidSchema.optional(),
     dateFrom: dateOnlySchema,
     dateTo: dateOnlySchema,
-    groupBy: z.enum(["DAY", "WEEK", "MONTH"]).default("DAY"),
+    groupBy: z.enum(['DAY', 'WEEK', 'MONTH']).default('DAY'),
   })
   .refine((data) => new Date(data.dateFrom) <= new Date(data.dateTo), {
-    message: "Start date must be before or equal to end date",
+    message: 'Start date must be before or equal to end date',
   });
 
 export const revenueReportSchema = z.object({
   dateFrom: dateOnlySchema,
   dateTo: dateOnlySchema,
-  groupBy: z.enum(["DAY", "WEEK", "MONTH", "ROUTE", "DRIVER"]).default("DAY"),
+  groupBy: z.enum(['DAY', 'WEEK', 'MONTH', 'ROUTE', 'DRIVER']).default('DAY'),
   routeId: uuidSchema.optional(),
   driverId: uuidSchema.optional(),
 });
@@ -677,6 +709,7 @@ export const schemas = {
   login: loginSchema,
   refreshToken: refreshTokenSchema,
   changePassword: changePasswordSchema,
+  forgotPassword: forgotPasswordSchema,
   resetPassword: resetPasswordSchema,
   verifyEmail: verifyEmailSchema,
   verifyPhone: verifyPhoneSchema,

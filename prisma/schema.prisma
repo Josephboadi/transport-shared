@@ -126,6 +126,7 @@ model User {
     createdLocations Location[]      @relation("LocationCreator")
     createdRoutes    Route[]         @relation("RouteCreator")
     notifications    Notification[]
+    deviceTokens     DeviceToken[]
     paymentMethods   PaymentMethod[]
     auditLogs        AuditLog[]
     assignedRoles    UserRole[]      @relation("RoleAssigner")
@@ -561,6 +562,25 @@ model Notification {
     @@index([type])
     @@index([createdAt])
     @@map("notifications")
+}
+
+model DeviceToken {
+    id         String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+    userId     String   @db.Uuid
+    token      String   @unique @db.Text
+    platform   String   @db.VarChar(20) // 'ios', 'android', 'web'
+    lastUsedAt DateTime @default(now()) @db.Timestamptz(3)
+    createdAt  DateTime @default(now()) @db.Timestamptz(3)
+    updatedAt  DateTime @updatedAt @db.Timestamptz(3)
+
+    // Relations
+    user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@unique([userId, token])
+    @@index([userId])
+    @@index([platform])
+    @@index([lastUsedAt])
+    @@map("device_tokens")
 }
 
 // ============================================================================
