@@ -118,6 +118,10 @@ export const registerUserSchema = z.object({
   lastName: z.string().min(1).max(100),
   userType: UserType.default('PASSENGER'),
   dateOfBirth: dateOnlySchema.optional(),
+  licenseNumber: z.string().min(1).max(50).optional(),
+  licenseExpiryDate: dateOnlySchema.optional(),
+  emergencyContactName: z.string().min(1).max(255).optional(),
+  emergencyContactPhone: phoneSchema.optional(),
 });
 
 export const loginSchema = z.object({
